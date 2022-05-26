@@ -4,7 +4,7 @@ pipeline {
     environment{
         //Ensure the desired Go version is installed
         root = tool type: 'go', name: 'Go-18' //Use GO-18 as it is the same used in building docker image and the name for the blugine
-        registry = "raghad123/GoViolin:latest"
+        registry = "raghad123/goviolin:latest"
         registryCredential = 'dockerhub-id'
         dockerImage = ''
     }
