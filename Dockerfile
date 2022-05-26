@@ -6,6 +6,7 @@ COPY . /build
 # the work directory to be build 
 WORKDIR /build
 # project will now successfully build with the necessary go libraries included. 
+RUN go mod vendor
 RUN go build -o  main .
 
 
