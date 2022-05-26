@@ -4,6 +4,9 @@ pipeline {
     environment{
         //Ensure the desired Go version is installed
         root = tool type: 'go', name: 'Go-18' //Use GO-18 as it is the same used in building docker image and the name for the blugine
+        registry = "raghad123/GoViolin"
+        registryCredential = 'dockerhub-id'
+        dockerImage = ''
     }
 
     // If anything fails, the whole Pipeline stops.
@@ -50,7 +53,9 @@ pipeline {
         // }
         stage('Docker Build') {
             steps {
-                sh 'docker build -t goapp:latest .'
+                script {
+                dockerImage = docker.build registry
+                }
             }
             post {
                 success {
@@ -64,9 +69,10 @@ pipeline {
         }
         stage('Docker Push') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-id', passwordVariable: 'Password', usernameVariable: 'User')]) {
-                sh "docker login -u ${User} -p ${Password}"
-                sh 'docker push goapp:latest'
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                    dockerImage.push()
+                    }
                 }
             }
             post {
