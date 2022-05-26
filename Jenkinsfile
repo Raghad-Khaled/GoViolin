@@ -77,5 +77,13 @@ pipeline {
       }      
 
     }
+    post {
+        success {
+             //send mail
+            mail to: "raghad200059@gmail.com",
+            subject: "GoViolin Project",
+            body: "goviolin:latest image pushed successfully to dockerhub"
+        }
+    }
 
 } 
