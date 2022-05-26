@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: raghad123/go-app:latest
+        image: raghad123/goviolin
         resources:
           limits:
             cpu: "300m"
