@@ -8,34 +8,7 @@ pipeline {
 
     // If anything fails, the whole Pipeline stops.
     stages {
-        stage('Build') {   
-
-            steps { 
-                withEnv(["GOROOT=${root}", "PATH+GO=${root}/bin"]) {                                          
-                // Create our project directory.
-                sh 'cd ${GOPATH}/src'
-                sh 'mkdir -p ${GOPATH}/src/MY_PROJECT_DIRECTORY'
-
-                // Copy all files in our Jenkins workspace to our project directory.                
-                sh "cp -r ${WORKSPACE}/* ${GOPATH}/src/MY_PROJECT_DIRECTORY"
-
-                // Copy all files in our "vendor" folder to our "src" folder.
-                sh "cp -r ${WORKSPACE}/vendor/* ${GOPATH}/src"
-
-                // Build the app.
-                sh 'go build'      
-                }         
-            }
-            post {
-                success {
-                    echo "Build is Succeeded.."
-                     
-                }
-                failure {
-                    echo "Build is Failed.." 
-                }
-            }            
-        }
+        
 
         stage('Test') {
             // Use golang.
