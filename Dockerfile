@@ -6,6 +6,7 @@ WORKDIR /build
 
 COPY go.mod ./
 COPY go.sum ./
+# install the modules necessary to compile it
 RUN go mod download
 
 # copy all to build file
