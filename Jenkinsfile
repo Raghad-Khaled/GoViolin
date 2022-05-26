@@ -28,6 +28,8 @@ pipeline {
                 // Remove cached test results.
                 sh "go clean -cache"
 
+                sh "go mod vendor"
+
                 sh "go mod download"
 
                 // Run Unit Tests.
