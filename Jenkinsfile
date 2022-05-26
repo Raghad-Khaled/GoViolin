@@ -10,42 +10,43 @@ pipeline {
     stages {
         
 
-        stage('Test') {
-            // Use golang.
+        // stage('Test') {
+        //     // Use golang.
 
-            steps {     
-                withEnv(["GOROOT=${root}", "PATH+GO=${root}/bin"]) {            
-                // Create our project directory.
-                // sh 'cd ${GOPATH}/src'
-                // sh 'mkdir -p ${GOPATH}/src/MY_PROJECT_DIRECTORY'
+        //     steps {     
+        //         withEnv(["GOROOT=${root}", "PATH+GO=${root}/bin"]) {            
+        //         // Create our project directory.
+        //         // sh 'cd ${GOPATH}/src'
+        //         // sh 'mkdir -p ${GOPATH}/src/MY_PROJECT_DIRECTORY'
 
-                // // Copy all files in our Jenkins workspace to our project directory.                
-                // sh "cp -r ${WORKSPACE}/* ${GOPATH}/src/MY_PROJECT_DIRECTORY"
+        //         // // Copy all files in our Jenkins workspace to our project directory.                
+        //         // sh "cp -r ${WORKSPACE}/* ${GOPATH}/src/MY_PROJECT_DIRECTORY"
 
-                // // Copy all files in our "vendor" folder to our "src" folder.
-                // sh "p -r ${WORKSPACE}/vendor/* ${GOPATH}/src"
+        //         // // Copy all files in our "vendor" folder to our "src" folder.
+        //         // sh "p -r ${WORKSPACE}/vendor/* ${GOPATH}/src"
 
-                // Remove cached test results.
-                sh "go clean -cache"
+        //         // Remove cached test results.
+        //         sh "go clean -cache"
 
-                sh "go mod vendor"
+        //         sh "go mod vendor"
 
-                sh "go mod download"
-
-                // Run Unit Tests.
-                sh "go test ./..."  
-                }          
-            }
-            post {
-                success {
-                    echo "Test is Succeeded.."
+        //         sh "go mod download"
+                
+        //         sh "go mod verify"
+        //         // Run Unit Tests.
+        //         sh "go test ./..."  
+        //         }          
+        //     }
+        //     post {
+        //         success {
+        //             echo "Test is Succeeded.."
                      
-                }
-                failure {
-                    echo "Test is Failed.." 
-                }
-            }
-        }
+        //         }
+        //         failure {
+        //             echo "Test is Failed.." 
+        //         }
+        //     }
+        // }
         stage('Docker Build') {
             steps {
                 sh 'docker build -t raghad123/go-app:latest .'
