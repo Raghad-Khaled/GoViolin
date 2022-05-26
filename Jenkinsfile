@@ -49,7 +49,7 @@ pipeline {
         // }
         stage('Docker Build') {
             steps {
-                sh 'docker build -t raghad123/go-app:latest .'
+                sh 'docker build -t go-app:latest .'
             }
             post {
                 success {
@@ -65,7 +65,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-id', passwordVariable: 'Password', usernameVariable: 'User')]) {
                 sh "docker login -u ${User} -p ${Password}"
-                sh 'docker push raghad123/go-app:latest'
+                sh 'docker push go-app:latest'
                 }
             }
             post {
