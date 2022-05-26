@@ -33,6 +33,7 @@ pipeline {
         //         sh "go mod download"
                 
         //         sh "go mod verify"
+        //         sh "go build"   
         //         // Run Unit Tests.
         //         sh "go test ./..."  
         //         }          
@@ -49,7 +50,7 @@ pipeline {
         // }
         stage('Docker Build') {
             steps {
-                sh 'docker build -t go-app:latest .'
+                sh 'docker build -t goapp:latest .'
             }
             post {
                 success {
@@ -65,7 +66,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-id', passwordVariable: 'Password', usernameVariable: 'User')]) {
                 sh "docker login -u ${User} -p ${Password}"
-                sh 'docker push go-app:latest'
+                sh 'docker push goapp:latest'
                 }
             }
             post {
