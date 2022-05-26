@@ -3,7 +3,7 @@ pipeline {
     agent any    
     environment{
         //Ensure the desired Go version is installed
-        root = tool type: 'go', name: 'GO-18' //Use GO-18 as it is the same used in building docker image and the name for the blugine
+        root = tool type: 'go', name: 'Go-18' //Use GO-18 as it is the same used in building docker image and the name for the blugine
     }
 
     // If anything fails, the whole Pipeline stops.
