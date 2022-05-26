@@ -1,15 +1,18 @@
 # builder image
-FROM golang:1.13-alpine3.11 as builder
+FROM golang:1.18.2-alpine3.15 as builder
 RUN mkdir /build
-ADD *.go /build/
+# copy all to build file
+COPY . /build
+# the work directory to be build 
 WORKDIR /build
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o main .
+# project will now successfully build with the necessary go libraries included. 
+RUN go build -o  main .
 
 
 # generate clean, final image for end users
 FROM alpine:3.11.3
-WORKDIR /
-COPY --from=builder /build/main .
+WORKDIR /app
+COPY --from=builder /build/ /app/
 
 EXPOSE 8081
 

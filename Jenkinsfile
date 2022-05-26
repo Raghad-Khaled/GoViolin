@@ -1,14 +1,17 @@
 pipeline {
     // Lets Jenkins use Docker for us later.
     agent any    
+    environment{
+        //Ensure the desired Go version is installed
+        root = tool type: 'go', name: 'GO-18' //Use GO-18 as it is the same used in building docker image and the name for the blugine
+    }
 
     // If anything fails, the whole Pipeline stops.
     stages {
         stage('Build') {   
-            // Use golang.
-            agent { docker { image 'golang' } }
 
-            steps {                                           
+            steps { 
+                withEnv(["GOROOT=${root}", "PATH+GO=${root}/bin"]) {                                          
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
                 sh 'mkdir -p ${GOPATH}/src/MY_PROJECT_DIRECTORY'
@@ -20,7 +23,8 @@ pipeline {
                 sh "cp -r ${WORKSPACE}/vendor/* ${GOPATH}/src"
 
                 // Build the app.
-                sh 'go build'               
+                sh 'go build'      
+                }         
             }
             post {
                 success {
@@ -35,9 +39,9 @@ pipeline {
 
         stage('Test') {
             // Use golang.
-            agent { docker { image 'golang' } }
 
-            steps {                 
+            steps {     
+                withEnv(["GOROOT=${root}", "PATH+GO=${root}/bin"]) {            
                 // Create our project directory.
                 sh 'cd ${GOPATH}/src'
                 sh 'mkdir -p ${GOPATH}/src/MY_PROJECT_DIRECTORY'
@@ -51,8 +55,11 @@ pipeline {
                 // Remove cached test results.
                 sh "go clean -cache"
 
+                sh "go mod download"
+
                 // Run Unit Tests.
-                sh "go test ./... -v -short"            
+                sh "go test ./..."  
+                }          
             }
             post {
                 success {
@@ -63,7 +70,38 @@ pipeline {
                     echo "Test is Failed.." 
                 }
             }
-        }      
+        }
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t raghad123/go-app:latest .'
+            }
+            post {
+                success {
+                    echo "Docker Build is Succeeded.."
+                     
+                }
+                failure {
+                    echo "Docker Build is Failed.." 
+                }
+            }
+        }
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-id', passwordVariable: 'Password', usernameVariable: 'User')]) {
+                sh "docker login -u ${User} -p ${Password}"
+                sh 'docker push raghad123/go-app:latest'
+                }
+            }
+            post {
+                success {
+                    echo "Docker Push is Succeeded.."
+                     
+                }
+                failure {
+                    echo "Docker Push is Failed.." 
+                }
+            }
+      }      
 
     }
 
